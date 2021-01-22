@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 4b52de9ae1491fb4c99e6099bcd81530
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _ClipTex: {fileID: 2800000, guid: 1d96160f41a448e4c9029440b94d7257, type: 3}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
