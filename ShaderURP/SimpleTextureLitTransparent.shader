@@ -369,18 +369,18 @@ Shader "MacacaCommon/URP/SimpleTextureLitTransparent"
 				float3 ase_worldNormal = IN.ase_texcoord3.xyz;
 				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - WorldPosition );
 				ase_worldViewDir = normalize(ase_worldViewDir);
-				float3 normalizeResult19_g4 = normalize( ( ase_worldViewDir + _MainLightPosition.xyz ) );
-				float dotResult21_g4 = dot( ase_worldNormal , normalizeResult19_g4 );
-				float smoothstepResult24_g4 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , _HighlightRange , dotResult21_g4);
+				float3 normalizeResult19_g6 = normalize( ( ase_worldViewDir + _MainLightPosition.xyz ) );
+				float dotResult21_g6 = dot( ase_worldNormal , normalizeResult19_g6 );
+				float smoothstepResult24_g6 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , ( _HighlightSmooth1 + _HighlightRange ) , dotResult21_g6);
 				float2 uv_MainTex = IN.ase_texcoord4.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				float4 tex2DNode47 = tex2D( _MainTex, uv_MainTex );
 				float dotResult8_g5 = dot( ase_worldNormal , _MainLightPosition.xyz );
 				float smoothstepResult5_g5 = smoothstep( ( _ShadowRange - _ShadowSmooth ) , ( _ShadowRange + _ShadowSmooth ) , dotResult8_g5);
-				float4 lerpResult51 = lerp( _ShadowColor , float4( 1,1,1,0 ) , saturate( ( smoothstepResult5_g5 * 0.0 ) ));
+				float4 lerpResult51 = lerp( _ShadowColor , float4( 1,1,1,0 ) , saturate( smoothstepResult5_g5 ));
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
-				float3 Color = ( ( _HighlightColor * smoothstepResult24_g4 ) + ( _Color * tex2DNode47 * lerpResult51 ) ).rgb;
+				float3 Color = ( ( _HighlightColor * smoothstepResult24_g6 ) + ( _Color * tex2DNode47 * lerpResult51 ) ).rgb;
 				float Alpha = ( _Color.a * tex2DNode47.a );
 				float AlphaClipThreshold = 0.5;
 				float AlphaClipThresholdShadow = 0.5;
@@ -898,7 +898,7 @@ Node;AmplifyShaderEditor.SimpleMultiplyOpNode;48;-141.0976,-543.3983;Inherit;Tru
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;52;-350.0959,-603.8557;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;54;-592,-144;Inherit;False;SimpleLit;3;;5;45decee545bb1ab46bbc6e9ac3dfcf6e;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;7;-288,-944;Inherit;False;Property;_HighlightColor;HighlightColor;6;0;Create;True;0;0;0;False;0;False;0.2745098,0.2745098,0.2745098,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;53;-256,-752;Inherit;False;SimpleHighlight;7;;4;84049ead9609ed84a99c7f3342740bd0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;53;-256,-752;Inherit;False;SimpleHighlight;7;;6;84049ead9609ed84a99c7f3342740bd0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;25;-64,-848;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;Meta;0;4;Meta;0;False;False;False;False;False;False;False;False;True;0;False;-1;True;0;False;-1;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;True;0;False;-1;True;0;False;-1;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;False;False;True;0;False;-1;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
@@ -919,4 +919,4 @@ WireConnection;25;1;53;0
 WireConnection;1;2;26;0
 WireConnection;1;3;52;0
 ASEEND*/
-//CHKSM=DE5417BC584B6FB282C6CFDBEE4E1D85134B03DC
+//CHKSM=2AA96E7879983B649B057A26724C60843FB8B737

@@ -363,10 +363,10 @@ Shader "MacacaCommon/URP/SimpleColorLitTransparent"
 				ase_worldViewDir = normalize(ase_worldViewDir);
 				float3 normalizeResult19_g4 = normalize( ( ase_worldViewDir + _MainLightPosition.xyz ) );
 				float dotResult21_g4 = dot( ase_worldNormal , normalizeResult19_g4 );
-				float smoothstepResult24_g4 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , _HighlightRange , dotResult21_g4);
+				float smoothstepResult24_g4 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , ( _HighlightSmooth1 + _HighlightRange ) , dotResult21_g4);
 				float dotResult8_g5 = dot( ase_worldNormal , _MainLightPosition.xyz );
 				float smoothstepResult5_g5 = smoothstep( ( _ShadowRange - _ShadowSmooth ) , ( _ShadowRange + _ShadowSmooth ) , dotResult8_g5);
-				float4 lerpResult21 = lerp( _ShadowColor , _Color , saturate( ( smoothstepResult5_g5 * 0.0 ) ));
+				float4 lerpResult21 = lerp( _ShadowColor , _Color , saturate( smoothstepResult5_g5 ));
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
@@ -862,7 +862,7 @@ Shader "MacacaCommon/URP/SimpleColorLitTransparent"
 }
 /*ASEBEGIN
 Version=18800
-0;106;1080;868;2680.01;2092.306;3.101491;True;False
+0;106;1080;868;1287.239;1343.435;1.932875;True;False
 Node;AmplifyShaderEditor.SimpleAddOpNode;26;172.2037,-844.3555;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.ColorNode;5;-400,-480;Inherit;False;Property;_Color;Color;0;0;Create;True;0;0;0;False;0;False;1,0.6231969,0,1;1,0.6231969,0,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;6;-400,-656;Inherit;False;Property;_ShadowColor;ShadowColor;1;0;Create;True;0;0;0;False;0;False;0.8301887,0.2408503,0,1;1,0.4405406,0,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -886,4 +886,4 @@ WireConnection;25;1;47;0
 WireConnection;1;2;26;0
 WireConnection;1;3;5;4
 ASEEND*/
-//CHKSM=8AE07DD54C19A5ABE5158E42C00CFB40A8C48A36
+//CHKSM=EB3C66F97A18139DAB0E23FCF2CA31C96A100063

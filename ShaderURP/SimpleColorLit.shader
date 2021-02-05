@@ -361,16 +361,16 @@ Shader "MacacaCommon/URP/SimpleColorLit"
 				float3 ase_worldNormal = IN.ase_texcoord3.xyz;
 				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - WorldPosition );
 				ase_worldViewDir = normalize(ase_worldViewDir);
-				float3 normalizeResult19_g4 = normalize( ( ase_worldViewDir + _MainLightPosition.xyz ) );
-				float dotResult21_g4 = dot( ase_worldNormal , normalizeResult19_g4 );
-				float smoothstepResult24_g4 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , _HighlightRange , dotResult21_g4);
+				float3 normalizeResult19_g6 = normalize( ( ase_worldViewDir + _MainLightPosition.xyz ) );
+				float dotResult21_g6 = dot( ase_worldNormal , normalizeResult19_g6 );
+				float smoothstepResult24_g6 = smoothstep( ( _HighlightRange - _HighlightSmooth1 ) , ( _HighlightSmooth1 + _HighlightRange ) , dotResult21_g6);
 				float dotResult8_g5 = dot( ase_worldNormal , _MainLightPosition.xyz );
 				float smoothstepResult5_g5 = smoothstep( ( _ShadowRange - _ShadowSmooth ) , ( _ShadowRange + _ShadowSmooth ) , dotResult8_g5);
-				float4 lerpResult21 = lerp( _ShadowColor , _Color , saturate( ( smoothstepResult5_g5 * 0.0 ) ));
+				float4 lerpResult21 = lerp( _ShadowColor , _Color , saturate( smoothstepResult5_g5 ));
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
-				float3 Color = ( ( _HighlightColor * smoothstepResult24_g4 ) + lerpResult21 ).rgb;
+				float3 Color = ( ( _HighlightColor * smoothstepResult24_g6 ) + lerpResult21 ).rgb;
 				float Alpha = 1;
 				float AlphaClipThreshold = 0.5;
 				float AlphaClipThresholdShadow = 0.5;
@@ -862,15 +862,15 @@ Shader "MacacaCommon/URP/SimpleColorLit"
 }
 /*ASEBEGIN
 Version=18800
-0;106;1080;868;2528.366;1800.242;2.943187;True;False
+0;106;1080;868;2113.377;1962.118;2.943187;True;False
 Node;AmplifyShaderEditor.LerpOp;21;-160,-496;Inherit;True;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.ColorNode;6;-400,-656;Inherit;False;Property;_ShadowColor;ShadowColor;1;0;Create;True;0;0;0;False;0;False;0.8301887,0.2408503,0,1;1,0.4405406,0,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ColorNode;5;-400,-480;Inherit;False;Property;_Color;Color;0;0;Create;True;0;0;0;False;0;False;1,0.6231969,0,1;1,0.6231969,0,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;6;-400,-656;Inherit;False;Property;_ShadowColor;ShadowColor;1;0;Create;True;0;0;0;False;0;False;0.8301887,0.2408503,0,1;1,0.1875372,0,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;5;-400,-480;Inherit;False;Property;_Color;Color;0;0;Create;True;0;0;0;False;0;False;1,0.6231969,0,1;1,0.6034184,0,0.6509804;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleAddOpNode;26;172.2037,-844.3555;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;25;-64,-848;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.ColorNode;7;-288,-944;Inherit;False;Property;_HighlightColor;HighlightColor;5;0;Create;True;0;0;0;False;0;False;0.2745098,0.2745098,0.2745098,1;1,1,1,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;47;-256,-768;Inherit;False;SimpleHighlight;6;;4;84049ead9609ed84a99c7f3342740bd0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode;7;-288,-944;Inherit;False;Property;_HighlightColor;HighlightColor;5;0;Create;True;0;0;0;False;0;False;0.2745098,0.2745098,0.2745098,1;0.2169811,0.2169811,0.2169811,1;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.FunctionNode;48;-336,-304;Inherit;False;SimpleLit;2;;5;45decee545bb1ab46bbc6e9ac3dfcf6e;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;49;-256,-768;Inherit;False;SimpleHighlight;6;;6;84049ead9609ed84a99c7f3342740bd0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;Meta;0;4;Meta;0;False;False;False;False;False;False;False;False;True;0;False;-1;True;0;False;-1;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;DepthOnly;0;3;DepthOnly;0;False;False;False;False;False;False;False;False;True;0;False;-1;True;0;False;-1;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;False;False;True;0;False;-1;False;True;False;False;False;False;0;False;-1;False;False;False;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;True;0;False;-1;True;0;False;-1;False;False;False;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;False;False;True;0;False;-1;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
@@ -882,7 +882,7 @@ WireConnection;21;2;48;0
 WireConnection;26;0;25;0
 WireConnection;26;1;21;0
 WireConnection;25;0;7;0
-WireConnection;25;1;47;0
+WireConnection;25;1;49;0
 WireConnection;1;2;26;0
 ASEEND*/
-//CHKSM=DDC0C4C0376AB15FDFED1CEBC251631A764A3168
+//CHKSM=1B8EE9C5F75B03C82E79A0A333E4740E5ED2B432
