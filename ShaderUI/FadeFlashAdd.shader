@@ -17,6 +17,7 @@ Shader "MacacaCommon/UI/FadeFlashAdd"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 		[NoScaleOffset]_FlashGradient("FlashGradient", 2D) = "white" {}
+		_FlashSpeed("FlashSpeed", Float) = 1
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 
 	}
@@ -69,6 +70,7 @@ Shader "MacacaCommon/UI/FadeFlashAdd"
 			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 			
+			#include "UnityShaderVariables.cginc"
 			#define ASE_NEEDS_FRAG_COLOR
 
 			
@@ -98,6 +100,8 @@ Shader "MacacaCommon/UI/FadeFlashAdd"
 			uniform sampler2D _MainTex;
 			uniform float4 _MainTex_ST;
 			uniform sampler2D _FlashGradient;
+			uniform float4 _FlashGradient_ST;
+			uniform float _FlashSpeed;
 
 			
 			v2f vert( appdata_t IN  )
@@ -125,9 +129,11 @@ Shader "MacacaCommon/UI/FadeFlashAdd"
 
 				float2 uv_MainTex = IN.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				float4 tex2DNode5 = tex2D( _MainTex, uv_MainTex );
-				float2 uv_FlashGradient7 = IN.texcoord.xy;
+				float2 uv_FlashGradient = IN.texcoord.xy * _FlashGradient_ST.xy + _FlashGradient_ST.zw;
+				float4 appendResult11 = (float4(0.001 , 0.0 , _FlashSpeed , 0.0));
+				float4 temp_output_14_0_g1 = appendResult11;
 				
-				half4 color = ( tex2DNode5 * IN.color * tex2DNode5.a * tex2D( _FlashGradient, uv_FlashGradient7 ).r * IN.color.a );
+				half4 color = ( tex2DNode5 * IN.color * tex2DNode5.a * tex2D( _FlashGradient, ( ( uv_FlashGradient * (temp_output_14_0_g1).xy ) + ( (temp_output_14_0_g1).zw * _Time.y ) ) ).r * IN.color.a );
 				
 				#ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
@@ -148,19 +154,22 @@ Shader "MacacaCommon/UI/FadeFlashAdd"
 }
 /*ASEBEGIN
 Version=18921
-2858;305;840;552;1220.777;75.97498;1.439541;True;True
-Node;AmplifyShaderEditor.TemplateShaderPropertyNode;1;-782.235,165.295;Inherit;False;0;0;_MainTex;Shader;True;0;5;SAMPLER2D;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.VertexColorNode;2;-461.711,569.6868;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;5;-592,160;Inherit;True;Property;_MainTex;MainTex;2;0;Fetch;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;0,0,0,0;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;7;-596.6579,368.6578;Inherit;True;Property;_FlashGradient;FlashGradient;0;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;536a7d21fa4e37d439e24dea2226ff4b;536a7d21fa4e37d439e24dea2226ff4b;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+581;233;1339;660;1529.558;142.1939;1.439541;True;True
 Node;AmplifyShaderEditor.RangedFloatNode;8;-1180.869,539.8617;Inherit;False;Property;_FlashSpeed;FlashSpeed;1;0;Create;True;0;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;11;-997.3101,495.737;Inherit;False;FLOAT4;4;0;FLOAT;0.001;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.TextureCoordinatesNode;20;-1076.823,357.3272;Inherit;False;0;7;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.FunctionNode;9;-822.576,398.6628;Inherit;False;TileAndScroll;-1;;1;;0;0;0
+Node;AmplifyShaderEditor.TemplateShaderPropertyNode;1;-782.235,165.295;Inherit;False;0;0;_MainTex;Shader;True;0;5;SAMPLER2D;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.FunctionNode;9;-822.576,398.6628;Inherit;False;TileAndScroll;-1;;1;3262e767efbcec9488c5093014105e3c;0;2;13;FLOAT2;0,0;False;14;FLOAT4;1,1,0,0.5;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.VertexColorNode;2;-461.711,569.6868;Inherit;False;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;5;-592,160;Inherit;True;Property;_MainTex;MainTex;2;0;Fetch;True;0;0;0;False;0;False;-1;None;37e6f91f3efb0954cbdce254638862ea;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;0,0,0,0;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SamplerNode;7;-596.6579,368.6578;Inherit;True;Property;_FlashGradient;FlashGradient;0;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;-1;536a7d21fa4e37d439e24dea2226ff4b;0548e9f70babbc84a8220ff9540a62e5;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;18;-153.6117,325.3625;Inherit;False;5;5;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;56.47011,370.6473;Float;False;True;-1;2;ASEMaterialInspector;0;6;MacacaCommon/UI/FadeFlashAdd;5056123faa0c79b47ab6ad7e8bf059a4;True;Default;0;0;Default;2;False;True;4;1;False;-1;1;False;-1;0;1;False;-1;0;False;-1;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;-1;False;True;True;True;True;True;0;True;-9;False;False;False;False;False;False;False;True;True;0;True;-5;255;True;-8;255;True;-7;0;True;-4;0;True;-6;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;False;True;2;False;-1;True;0;True;-11;False;True;5;Queue=Transparent=Queue=0;IgnoreProjector=True;RenderType=Transparent=RenderType;PreviewType=Plane;CanUseSpriteAtlas=True;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;0;;0;0;Standard;0;0;1;True;False;;False;0
-WireConnection;5;0;1;0
 WireConnection;11;2;8;0
+WireConnection;9;13;20;0
+WireConnection;9;14;11;0
+WireConnection;5;0;1;0
+WireConnection;7;1;9;0
 WireConnection;18;0;5;0
 WireConnection;18;1;2;0
 WireConnection;18;2;5;4
@@ -168,4 +177,4 @@ WireConnection;18;3;7;1
 WireConnection;18;4;2;4
 WireConnection;0;0;18;0
 ASEEND*/
-//CHKSM=274CFC14E0276F0265E73F358D28E65A385F5997
+//CHKSM=1029CC5400598FC0AA8B97183CC4E1BD0DBB6819
